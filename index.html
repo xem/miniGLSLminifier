@@ -2,12 +2,12 @@
 <p>- Removes comments
 <br>- Removes unnecessary spaces, tabs, line breaks
 <br>- Removes zeroes in floats (ex: <b>1.0</b> => <b>1.</b> , <b>0.10</b> => <b>.1</b>)
-<br>- Inserts "\n" after the macros (ex: <b>#define foo 123\n</b>) to keep all the code on a single line<b>
+<br>- Inserts "\n" after the macros (ex: <b>#define foo 123\n</b>) to keep all the code on a single line
 <p>
 
 <textarea oninput='value=value.replace(/\\n/g,"\n").replace(/(#.*?)\s*\n/g,"$1\\n").replace(/(\/\*[^]+?\*\/|\/\/.*|\s)+/g," ").replace(/ *([;,.{}[\]()+*\/<>=!&|^-]) */g,"$1").replace(/(\D)((\d+\.)0|0(\.\d+))(\D)/g,"$1$3$4$5")' cols=100 rows=30 placeholder="Paste GLSL code here"></textarea>
 
-<p>Test shader:
+<p><b>Test shader:</b>
 <p><pre style=background:#eee;padding:10px>
 #version 300 es    
 
