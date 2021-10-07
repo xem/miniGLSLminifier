@@ -1,19 +1,21 @@
 <h3>Mini GLSL minifier (WebGL 1.0 / 2.0)</h3>
 <p>- Removes comments
 <br>- Removes unnecessary spaces, tabs, line breaks
-<br>- Removes unnecessary zeroes in ints and floats
+<br>- Removes unnecessary zeroes in floats ("0." / ".0")
 <br>- Inserts "\n" after the #macros to keep all the code on a single line
 <p>
 
-<textarea oninput='
-  value=value.replace(/\\n/g,"\n")
-             .replace(/(#.*?)\s*\n/g,"$1\\n")
-             .replace(/(\/\*[^]+?\*\/|\/\/.*|\s)+/g," ")
-             .replace(/ *([;,.{}[\]()+*\/<>=!&|^-]) */g,"$1")
-             .replace(/(\D\d*\.\d*?)0*(?=\D)/g,"$1")
-             .replace(/(\D)0(\d*\.)/g,"$1$2")
-             .replace(/([^\d.])0*(\d+?)(?=\D)/g,"$1$2")
-  ' cols=100 rows=10 placeholder="Paste GLSL code here"></textarea>
+<textarea id=t cols=100 rows=10 placeholder="Paste GLSL code here"></textarea>
+
+<script>
+t.oninput=()=>{
+  t.value=t.value.replace(/\\n/g,"\n")
+                 .replace(/(#.*?)\s*\n/g,"$1\\n")
+                 .replace(/(\/\*[^]+?\*\/|\/\/.*|\s)+/g," ")
+                 .replace(/ *([;,.{}[\]()+*\/<>=!&|^-]) */g,"$1")
+                 .replace(/(\d\.\d*?)0+|(\D)0+(\d*\.\d)/g, "$1$2$3")
+}
+</script>
 
 <p><b>Test shader:</b>
 <p><pre style=background:#eee;padding:10px>
@@ -27,7 +29,7 @@ out vec4      c;\n
 #define PI 3\n
 
 void main() { /* compute fragment */
-  vec4 testFloats = vec4(010.0, 01.1200, 0.02030, 00.00);
+  vec4 testFloats = vec4(010.00, 01.1200, 0.02030, 00.);
   vec4 testInts = vec4(0, 00, 010, 001);
   c = vec4(
     v_color.rgb * (
