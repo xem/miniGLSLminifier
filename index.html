@@ -1,19 +1,22 @@
 <h3>Mini GLSL minifier (WebGL 1.0 / 2.0)</h3>
 <p>- Removes comments
 <br>- Removes unnecessary spaces, tabs, line breaks
-<br>- Removes unnecessary zeroes in floats ("0." / ".0")
-<br>- Inserts "\n" after the #macros to keep all the code on a single line
+<br>- Removes unnecessary zeroes in numbers (floats, ints, octals, hex)
+<br>- Inserts "\n" around #macros to keep all the code on a single line
 <p>
 
 <textarea id=t cols=100 rows=10 placeholder="Paste GLSL code here"></textarea>
 
 <script>
 t.oninput=()=>{
-  t.value=t.value.replace(/\\n/g,"\n")
-                 .replace(/(#.*?)\s*\n/g,"$1\\n")
-                 .replace(/(\/\*[^]+?\*\/|\/\/.*|\s)+/g," ")
-                 .replace(/ *([;,.{}[\]()+*\/<>=!&|^-]) */g,"$1")
-                 .replace(/(\d\.\d*?)0+|(\D)0+(\d*\.\d)/g, "$1$2$3")
+  t.value=t.value.replace(/\\n/g,"\n") // remove "\n"
+                 .replace(/(#.*?)\s*\n/g,"\\n$1\\n") // "\n" around macros
+                 .replace(/(\/\*[^]+?\*\/|\/\/.*|\s)+/g," ") // comments
+                 .replace(/ *([;,.{}[\]()+*\/<>=!&|^-]) */g,"$1") // spaces
+                 .replace(/0x0+/g,"0x") // hex
+                 .replace(/([^.\da-zA-Z])0+(0\d+)(?=[^.\da-zA-Z])/g,"$1$2") // octals
+                 .replace(/([^.\da-zA-Z_])(\d+\.\d*|\d*\.\d+)(?=[^.\da-zA-Z_])/g,(a,b,c,d)=>{return b+(+c).toFixed(9).replace(/^0*(\d*?\.\d*?)0*$/,"$1").replace(/^\.$/,"0.")}) // floats
+                 .replace(/^\\n|\\n$/,"") // start/end "\n"
 }
 </script>
 
@@ -29,13 +32,15 @@ out vec4      c;\n
 #define PI 3\n
 
 void main() { /* compute fragment */
-  vec4 testFloats = vec4(010.00, 01.1200, 0.02030, 00.);
-  vec4 testInts = vec4(0, 00, 010, 001);
+  vec4 testFloats = vec4(010.00, 01.1200, 0.02030, 00.00);
+  vec4 testInts = vec4(0, 1, 100, 10010);
+  int testOctal = 0010;
+  int testHex = 0x001F;
   c = vec4(
     v_color.rgb * (
       max(dot(light, normalize(cross(dFdx(v_position), dFdy(v_position)))), 0.0) // ambient light
       + 0.200 // diffuse light
-    ), 010
+    ), 1
   );
 }
 </pre>
