@@ -12,7 +12,7 @@ t.oninput=()=>{
   t.value=t.value.replace(/\\n/g,"\n") // remove "\n"
                  .replace(/(#.*?)\s*\n/g,"\\n$1\\n") // "\n" around macros
                  .replace(/(\/\*[^]+?\*\/|\/\/.*|\s)+/g," ") // comments
-                 .replace(/ *([;,.{}[\]()+*\/<>=!&|^-]) */g,"$1") // spaces
+                 .replace(/ *([;,.?:{}[\]()+*\/<>=!&|^-]) */g,"$1") // spaces
                  .replace(/0x0+/g,"0x") // hex
                  .replace(/([^.\da-zA-Z])0+(0\d+)(?=[^.\da-zA-Z])/g,"$1$2") // octals
                  .replace(/([^.\da-zA-Z_])(\d+\.\d*|\d*\.\d+)(?=[^.\da-zA-Z_])/g,(a,b,c,d)=>{return b+(+c).toFixed(9).replace(/^0*(\d*?\.\d*?)0*$/,"$1").replace(/^\.$/,"0.")}) // floats
