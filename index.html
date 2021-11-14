@@ -9,20 +9,23 @@
 
 <script>
 t.oninput=()=>{
-  t.value=t.value.replace(/\\n/g,"\n") // remove "\n"
-                 .replace(/(#.*?)\s*\n/g,"\\n$1\\n") // "\n" around macros
-                 .replace(/(\/\*[^]+?\*\/|\/\/.*|\s)+/g," ") // comments
-                 .replace(/ *([;,.?:{}[\]()+*\/<>=!&|^-]) */g,"$1") // spaces
-                 .replace(/0x0+/g,"0x") // hex
-                 .replace(/([^.\da-zA-Z])0+(0\d+)(?=[^.\da-zA-Z])/g,"$1$2") // octals
-                 .replace(/([^.\da-zA-Z_])(\d+\.\d*|\d*\.\d+)(?=[^.\da-zA-Z_])/g,(a,b,c,d)=>{return b+(+c).toFixed(9).replace(/^0*(\d*?\.\d*?)0*$/,"$1").replace(/^\.$/,"0.")}) // floats
-                 .replace(/^\\n|\\n$/,"") // start/end "\n"
+  t.value=t.value
+    .replace(/\\n/g,"\n") // remove hardcoded line breaks
+    .replace(/(\/\*[^]+?\*\/|\/\/.*)+/g," ") // remove comments
+    .replace(/(#.*?)\s*\n/g,"\\n$1\\n") // add "\n" around macros
+    .replace(/\s+/g," ") // convert tabs, line breaks, spaces, etc to 1 space
+    .replace(/ *([;,.?:{}[\]()+*\/<>=!&|^-]) */g,"$1") // remove spaces around operators
+    .replace(/0x0+/g,"0x") // remove leading zeros in hex numbers
+    .replace(/([^.\da-zA-Z])0+(0\d+)(?=[^.\da-zA-Z])/g,"$1$2") // remove leading zeros in octals and ints
+    .replace(/([^.\da-zA-Z_])(\d+\.\d*|\d*\.\d+)(?=[^.\da-zA-Z_])/g,(a,b,c,d)=>{return b+(+c).toFixed(9).replace(/^0*(\d*?\.\d*?)0*$/,"$1").replace(/^\.$/,"0.")}) // remove leading zeros in floats
+    .replace(/^\\n|\\n$/,"") // remove start/end "\n"
+    .replace(/(\\n)+/g,"\\n") // remove extra "\n"
 }
 </script>
 
 <p><b>Test shader:</b>
 <p><pre style=background:#eee;padding:10px>
-#version 300 es    
+#version 300 es    // webgl2
 
 precision mediump float;
 uniform vec3 light;
@@ -30,6 +33,7 @@ in vec3 v_position;
 in vec4 v_color;
 out vec4      c;\n
 #define PI 3\n
+#define 2PI 7\n
 
 void main() { /* compute fragment */
   vec4 testFloats = vec4(010.00, 01.1200, 0.02030, 00.00);
