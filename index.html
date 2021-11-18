@@ -19,23 +19,23 @@ t.oninput=()=>{
     .replace(/([^.\da-zA-Z])0+(0\d+)(?=[^.\da-zA-Z])/g,"$1$2") // remove leading zeros in octals and ints
     .replace(/([^.\da-zA-Z_])(\d+\.\d*|\d*\.\d+)(?=[^.\da-zA-Z_])/g,(a,b,c,d)=>{return b+(+c).toFixed(9).replace(/^0*(\d*?\.\d*?)0*$/,"$1").replace(/^\.$/,"0.")}) // remove leading zeros in floats
     .replace(/^\\n|\\n$/,"") // remove start/end "\n"
-    .replace(/(\\n)+/g,"\\n") // remove extra "\n"
+    .replace(/(\\n)+ */g,"\\n") // remove extra "\n" and spaces after "\n"
 }
 </script>
 
 <p><b>Test shader:</b>
 <p><pre style=background:#eee;padding:10px>
 #version 300 es    // webgl2
-
 precision mediump float;
-uniform vec3 light;
+ uniform vec3 light;
 in vec3 v_position;
 in vec4 v_color;
 out vec4      c;\n
 #define PI 3\n
 #define 2PI 7\n
 
-void main() { /* compute fragment */
+void main() { /* compute fragment 
+  multiline comment */
   vec4 testFloats = vec4(010.00, 01.1200, 0.02030, 00.00);
   vec4 testInts = vec4(0, 1, 100, 10010);
   int testOctal = 0010;
